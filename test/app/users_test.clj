@@ -36,14 +36,14 @@
                             :org/name "Custom Org Name"}])))
 
       (testing "with an already registered email address, registration fails"
-        (let [{:keys [user/email] :as user} (gen :a.user/rnd)]
-          (app.users/reg! sys user)
+        (let [{:keys [user/email] :as user} (gen :a.user/rnd)
+              _first-reg (app.users/reg! sys user)]
           (is (thrown-with-msg? Exception #"Duplicate email"
                                 (app.users/reg! sys user))))))))
 
 (comment
-  (let [db (-> system.repl/system :datomic :conn d/db)]
+  (with-components [sys (sys/test)]
     (->> (gen :a.user/rnd
               ;:db/id "user-id"
               :user/full-name "Full Name")
-         (app.users/reg-tx db))))
+         (app.users/reg-tx (latest-db sys)))))

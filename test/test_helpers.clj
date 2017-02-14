@@ -2,9 +2,7 @@
   (:use app.utils)
   (:require
     [com.stuartsierra.component :refer [stop start]]
-    [datomic.api :as d]
-    [clojure.spec :as s]
-    [clojure.spec.gen :as gen]))
+    [datomic.api :as d]))
 
 ; Source: https://github.com/stuartsierra/component/issues/6
 (defmacro with-components
@@ -22,11 +20,8 @@
          (with-components ~(subvec bindings 2) ~@body)
          (finally (stop ~(bindings 0)))))))
 
-(defn speculate [{:keys [datomic]} & txs]
+(defn speculate [sys & txs]
   (reduce
     (fn [db tx] (:db-after (d/with db tx)))
-    (d/db (:conn datomic))
+    (latest-db sys)
     txs))
-
-(defn speculate* [{:keys [datomic]} tx]
-  (d/with (d/db (:conn datomic)) tx))
