@@ -4,7 +4,9 @@
     [datomic.api :as d]
     [com.stuartsierra.component :as component]
     [schema.core :as s]
-    [clojure.string :as str]))
+    [clojure.string :as str]
+
+    [app.users]))
 
 (defdbfn dbinc [db e a qty] :db.part/user
   [[:db/add e a (+ qty (or (get (d/entity db e) a) 0))]])
@@ -57,7 +59,7 @@
                    (concat
                      (generate-parts (dbparts))
                      (generate-schema (dbschema) {:index-all? true})
-                     (dbfns->datomic dbinc edit-tx)))
+                     (dbfns->datomic dbinc edit-tx app.users/reg-tx)))
       :ok))
 
   (stop [_]))

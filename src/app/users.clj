@@ -4,6 +4,8 @@
     [clojure.spec :as s]
     [clojure.spec.gen :as gen]
     [datomic.api :as d]
+    [datomic-schema.schema :refer :all]
+
     [castra.core :refer [defrpc ex *session*]]
     [system.repl :refer [system]]
     [debux.core :as dx :refer :all]
@@ -29,13 +31,15 @@
                                  :user/full-name]
                            :opt [:org/name]))
 
-(defn reg [{:keys [db/id user/full-name org/name] :as user}]
-  (let [user-id (or id "user-id")
-        user+org (assoc user :db/id user-id
-                             :org/name (or name full-name)
-                             :user/orgs [user-id])]
-    [user+org]))
+(defdbfn reg-tx [db user] :db.part/user
+  (let [{:keys [db/id user/email user/full-name org/name]} user]
+    (when (d/entity db [:user/email email])
+      (-> (str "Duplicate email: " email) RuntimeException. throw))
+    (let [user-id (or id "user-id")]
+      [(assoc user :db/id user-id
+                   :org/name (or name full-name)
+                   :user/orgs [user-id])])))
 
 (defn reg! [sys user]
-  (->> (reg user)
+  (->> [[:reg-tx user]]
        (tx! sys)))

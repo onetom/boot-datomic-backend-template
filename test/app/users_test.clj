@@ -36,14 +36,14 @@
             :user/orgs :> [{:db/id    user-id
                             :org/name "Custom Org Name"}])))
 
-      #_(testing "with an already registered email address, registration fails"
-          (let [user (gen-user :user/email "joe@x.y")]
-            (register! sys user)
-            (is (thrown-with-msg? Exception #"Duplicate email"
-                                  (register! sys user))))))))
+      (testing "with an already registered email address, registration fails"
+        (let [{:keys [user/email] :as user} (gen :a.user/rnd)]
+          (app.users/reg! sys user)
+          (is (thrown-with-msg? Exception #"Duplicate email"
+                                (app.users/reg! sys user))))))))
 
 (comment
   (->> (gen :a.user/rnd
             ;:db/id "user-id"
             :user/full-name "Full Name")
-       (app.users/reg)))
+       (app.users/reg-tx)))

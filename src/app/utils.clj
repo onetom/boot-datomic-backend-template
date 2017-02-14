@@ -5,7 +5,8 @@
     [datomic.api :as d]))
 
 (defn gen [spec & assocs]
-  (apply assoc (-> spec s/gen gen/generate) assocs))
+  (merge (-> spec s/gen gen/generate)
+         (apply hash-map assocs)))
 
 (defn txv
   "Transaction results as a vector"
