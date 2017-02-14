@@ -1,5 +1,6 @@
 (ns app.utils
   (:require
+    [debux.core :as dx]                                     ; Just to establish ns alias for Cursive
     [clojure.spec :as s]
     [clojure.spec.gen :as gen]
     [datomic.api :as d]))

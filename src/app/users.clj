@@ -8,7 +8,6 @@
 
     [castra.core :refer [defrpc ex *session*]]
     [system.repl :refer [system]]
-    [debux.core :as dx :refer :all]
     [environ.core :refer [env]]
     [buddy.sign.jwt :as jwt]))
 

@@ -3,7 +3,6 @@
   (:require
     [sys]
     [app.users]
-    [debux.core :as dx]
     [datomic.api :as d]))
 
 (def org-names '[:user/full-name
@@ -43,7 +42,8 @@
                                 (app.users/reg! sys user))))))))
 
 (comment
-  (->> (gen :a.user/rnd
-            ;:db/id "user-id"
-            :user/full-name "Full Name")
-       (app.users/reg-tx)))
+  (let [db (-> system.repl/system :datomic :conn d/db)]
+    (->> (gen :a.user/rnd
+              ;:db/id "user-id"
+              :user/full-name "Full Name")
+         (app.users/reg-tx db))))
