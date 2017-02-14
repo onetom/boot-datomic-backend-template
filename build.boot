@@ -10,8 +10,8 @@
     [onetom/boot-lein-generate "0.1.3" :scope "test"]
     [tailrecursion/boot-jetty "0.1.3"]
     [org.danielsz/system "0.4.0"]
-    [ring "1.6.0-beta6"]
-    [buddy "1.1.0"]
+    [ring "1.6.0-beta7"]
+    [buddy "1.3.0"]
     [philoskim/debux "0.2.1"]
     [hoplon/castra "3.0.0-alpha7"]
     [jumblerg/ring.middleware.cors "1.0.1"]
@@ -20,15 +20,14 @@
     [adzerk/bootlaces "0.1.13" :scope "test"]
     [datomic-schema "1.3.0"]
     [juxt/iota "0.2.3" :scope "test"]
-    [amazonica "0.3.76" :exclusions [com.amazonaws/amazon-kinesis-client
-                                     com.amazonaws/aws-java-sdk]]
-    [com.amazonaws/aws-java-sdk-core "1.11.41"]
-    [com.amazonaws/aws-java-sdk-s3 "1.11.41"]
-    [com.amazonaws/aws-java-sdk-dynamodb "1.11.41"]
+    ;[amazonica "0.3.86" :exclusions [com.amazonaws/amazon-kinesis-client
+    ;                                 com.amazonaws/aws-java-sdk]]
+    ;[com.amazonaws/aws-java-sdk-core "1.11.89"]
+    ;[com.amazonaws/aws-java-sdk-s3 "1.11.89"]
+    ;[com.amazonaws/aws-java-sdk-dynamodb "1.11.89"]
     [environ "1.1.0"]
     [boot-environ "1.1.0"]
-    [http-kit "2.2.0"]
-    [joda-time "2.9.4"]
+    [joda-time "2.9.7"]
     [org.clojure/data.json "0.2.6"]
     [org.clojure/data.fressian "0.2.1"]])
 

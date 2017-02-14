@@ -3,7 +3,6 @@
     [castra.core :refer [defrpc *session*]]
     [castra.middleware :refer [wrap-castra wrap-castra-session]]
     [ring.middleware.cors :refer [wrap-cors]]
-    [buddy.auth.middleware :refer (wrap-authentication)]
     [app.users]))
 
 (defn make-ring-handler []
