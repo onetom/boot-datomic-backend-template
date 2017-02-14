@@ -13,13 +13,17 @@
     [buddy.sign.jwt :as jwt]))
 
 (def admin-domain "company.com")
-(def domain-gen (gen/elements [admin-domain "gmail.com" "hotmail.com" "computer.org" "example.com"]))
-(def email-gen
+
+(def domain-generator
+  (gen/elements [admin-domain "gmail.com" "hotmail.com" "computer.org" "example.com"]))
+
+(def email-generator
   (gen/fmap (fn [[name domain-name]] (str name "@" domain-name))
-            (gen/tuple (gen/not-empty (gen/string-alphanumeric)) domain-gen)))
+            (gen/tuple (gen/not-empty (gen/string-alphanumeric))
+                       domain-generator)))
 
 (s/def :user/email (-> (s/spec string?)
-                       (s/with-gen (fn [] email-gen))))
+                       (s/with-gen (fn [] email-generator))))
 
 (s/def :user/full-name (-> (s/spec string?)
                            (s/with-gen #(gen/string-alphanumeric))))
