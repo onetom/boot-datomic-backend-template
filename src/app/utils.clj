@@ -5,9 +5,12 @@
     [clojure.spec.gen :as gen]
     [datomic.api :as d]))
 
-(defn gen [spec & assocs]
-  (merge (-> spec s/gen gen/generate)
-         (apply hash-map assocs)))
+(defn gen [spec & [override omit]]
+  (let [data (-> spec s/gen gen/generate)
+        with-overrides (if override (merge data override) data)]
+    (if omit
+      (apply dissoc with-overrides omit)
+      with-overrides)))
 
 (defn conn [sys] (-> sys :datomic :conn))
 

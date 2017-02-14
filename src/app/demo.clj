@@ -8,14 +8,14 @@
 (defn setup! [sys]
   (doto sys
     (app.users/reg! (gen :a.user/rnd
-                         :user/full-name "Buyer"
-                         :user/email "buyer@example.com"
-                         :org/name "Bill Investment Holdings"))
+                         {:user/full-name "Buyer"
+                          :user/email     "buyer@example.com"
+                          :org/name       "Bill Investment Holdings"}))
 
     (app.users/reg! (gen :a.user/rnd
-                         :user/full-name "Seller"
-                         :user/email "seller@example.com"
-                         :org/name "Sam Capital")))
+                         {:user/full-name "Seller"
+                          :user/email     "seller@example.com"
+                          :org/name       "Sam Capital"})))
 
   sys)
 

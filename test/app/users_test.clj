@@ -12,23 +12,22 @@
   (with-components [sys (sys/test)]
     (testing "When a user registers"
       (testing "they get an organization by default named after the user"
-        (let [[{:strs [user-id]}
-               db] (->> (dissoc (gen :a.user/rnd
-                                     :db/id "user-id"
-                                     :user/full-name "User Full Name")
-                                :org/name)
-                        (app.users/reg! sys))]
-          (given (d/pull db org-names user-id)
+        (let [[_ db] (->> (gen :a.user/rnd
+                               {:db/ident       :a-user
+                                :user/full-name "User Full Name"}
+                               [:org/name])
+                          (app.users/reg! sys))]
+          (given (d/pull db org-names :a-user)
             :user/full-name := "User Full Name"
-            :user/orgs :> [{:db/id    user-id
+            :user/orgs :> [{:db/id    (d/entid db :a-user)
                             :org/name "User Full Name"}])))
 
       (testing "they can customize their name as an organization"
         (let [[{:strs [user-id]}
                db] (->> (gen :a.user/rnd
-                             :db/id "user-id"
-                             :user/full-name "User Full Name"
-                             :org/name "Custom Org Name")
+                             {:db/id          "user-id"
+                              :user/full-name "User Full Name"
+                              :org/name       "Custom Org Name"})
                         (app.users/reg! sys))]
           (given (d/pull db org-names user-id)
             :user/full-name := "User Full Name"
@@ -44,6 +43,6 @@
 (comment
   (with-components [sys (sys/test)]
     (->> (gen :a.user/rnd
-              ;:db/id "user-id"
-              :user/full-name "Full Name")
+              {;:db/id "user-id"
+               :user/full-name "Full Name"})
          (app.users/reg-tx (latest-db sys)))))
