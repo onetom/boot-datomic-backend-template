@@ -11,7 +11,19 @@
 (deftest reg-test
   (with-components [sys (sys/test)]
     (testing "When a user registers"
-      (testing "they get an organization by default named after the user"
+      (testing "they themselves are an organization too (using a string tempid)"
+        (let [[{:strs [user-id]}
+               db] (->> (gen :a.user/rnd
+                             {:db/id          "user-id"
+                              :user/full-name "User Full Name"}
+                             [:org/name])
+                        (app.users/reg! sys))]
+          (given (d/pull db org-names user-id)
+            :user/full-name := "User Full Name"
+            :user/orgs :> [{:db/id    user-id
+                            :org/name "User Full Name"}])))
+
+      (testing "they themselves are an organization too (using db/ident as user-id)"
         (let [[_ db] (->> (gen :a.user/rnd
                                {:db/ident       :a-user
                                 :user/full-name "User Full Name"}
@@ -20,6 +32,18 @@
           (given (d/pull db org-names :a-user)
             :user/full-name := "User Full Name"
             :user/orgs :> [{:db/id    (d/entid db :a-user)
+                            :org/name "User Full Name"}])))
+
+      (testing "they themselves are an organization too (using user/email, the natural id as user-id)"
+        (let [{:keys [user/email]
+               :as   user} (gen :a.user/rnd
+                                {:user/full-name "User Full Name"}
+                                [:org/name])
+              user-id [:user/email email]
+              [_ db] (app.users/reg! sys user)]
+          (given (d/pull db org-names user-id)
+            :user/full-name := "User Full Name"
+            :user/orgs :> [{:db/id    (d/entid db user-id)
                             :org/name "User Full Name"}])))
 
       (testing "they can customize their name as an organization"
